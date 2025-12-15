@@ -1,0 +1,21 @@
+\documentclass{standalone}
+
+\usepackage{delveanddash}
+
+\begin{document}
+\begin{tikzpicture}
+\path (-105mm, -148.5mm) -- (105mm, 148.5mm);
+\pic at (-\horizdist,\vertdist) {playeraid};
+\pic at (0,\vertdist) {playeraid};
+\pic at (\horizdist,\vertdist) {playeraid};
+%
+\pic at (-\horizdist,0) {playeraid};
+\pic at (0,0) {playeraid};
+\pic at (\horizdist,0) {playeraid};
+
+\pic at (-\horizdist,-\vertdist) {playeraid};
+\pic at (0,-\vertdist) {playeraid};
+\pic at (\horizdist,-\vertdist) {playeraid};
+
+\end{tikzpicture}
+\end{document}

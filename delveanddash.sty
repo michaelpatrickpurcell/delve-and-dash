@@ -1,0 +1,263 @@
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+
+\usepackage{booktabs}
+
+\usepackage{fontspec}
+\setmainfont{Tex Gyre Schola}
+
+\usepackage{array}
+
+\usepackage{calc}
+
+
+\newlength{\cardwidth}
+\newlength{\cardheight}
+\newlength{\bleed}
+\newlength{\horizspace}
+\newlength{\vertspace}
+\newlength{\vertdist}
+\newlength{\horizdist}
+
+\setlength{\cardwidth}{2.5in}
+\setlength{\cardheight}{3.5in}
+\setlength{\bleed}{0.0625in}
+\setlength{\horizspace}{0.0625in}
+\setlength{\horizdist}{\cardwidth + 2\bleed + \horizspace}
+\setlength{\vertspace}{0.0625in}
+\setlength{\vertdist}{\cardheight + 2\bleed + \vertspace}
+
+
+\tikzset{guidecross/.pic={
+	\draw[#1] (-\bleed,0) -- (\bleed,0);
+	\draw[#1] (0, -\bleed) -- (0, \bleed);
+}}
+
+\tikzset{cutguide/.pic={
+	\pic () at (-\cardwidth/2, \cardheight/2) {guidecross={#1}};
+	\pic () at (\cardwidth/2, \cardheight/2) {guidecross={#1}};
+	\pic () at (-\cardwidth/2, -\cardheight/2) {guidecross={#1}};
+	\pic () at (\cardwidth/2, -\cardheight/2) {guidecross={#1}};
+}}
+
+\tikzset{cardbackpattern/.pic={
+	\foreach \i in {-1.25in, -1.0in, -0.75in, -0.5in, -0.25in, 0in, 0.25in, 0.5in, 0.75in, 1.0in, 1.25in}
+		\foreach \j in {-1.75in, -1.5in, -1.25in, -1.0in, -0.75in, -0.5in, -0.25in, 0in, 0.25in, 0.5in, 0.75in, 1.0in, 1.25in, 1.5in, 1.75in}
+			\draw[thick, #1] (\i,\j) circle (0.105in);
+
+	\foreach \i in {-1.375in, -1.125in, -0.875in,-0.625in, -0.375in, -0.125in, 0.125in, 0.375in, 0.625in, 0.875in, 1.125in, 1.375in}
+		\foreach \j in {-1.875in, -1.625in, -1.375in, -1.125in, -0.875in, -0.625in, -0.375in, -0.125in, 0.125in, 0.375in, 0.625in, 0.875in, 1.125in, 1.375in, 1.625in, 1.875in}
+			\draw[thick, #1] (\i,\j) circle (0.105in);
+}}
+
+\tikzset{Fighter/.pic={
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Special Ability:} \normalshape Before rolling, you may lock any die to either 1 or to its maximum value.};
+}}
+
+\tikzset{Cleric/.pic={
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Special Ability:} \normalshape You may lock any die to its maximum value rather than its rolled value.};
+}}
+
+\tikzset{Wizard/.pic={
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Special Ability:} \normalshape Collect a \$\$\$ treasure for each type of treasure with value greater than \$1 that you collect each round.};
+}}
+
+
+\tikzset{Rogue/.pic={
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Special Ability:} \normalshape When you collect treasure for a die, you may instead collect the treasure for any value less than the rolled value.};
+}}
+
+\tikzset{Thief/.pic={
+\pic at (0,0) {Rogue};
+}}
+
+\tikzset{Elf/.pic={
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Special Ability:} \normalshape Collect a \$\$\$ treasure for every treasure of value \$3 that you collect each round.};
+}}
+
+\tikzset{Dwarf/.pic={
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Special Ability:} \normalshape You may lock any d12 die for any value within one of its rolled value.};
+}}
+
+\tikzset{Halfling/.pic={
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Special Ability:} \normalshape Decrease the penalty for locking any die to an even value by two.};
+}}
+
+\tikzset{Bard/.pic={
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Special Ability:} \normalshape Collect a number of \$\$\$ treasures equal to the length of your longest run of consecutive locked values each round.};
+}}
+
+\tikzset{Dragon/.pic={
+\node[anchor=north east, text width=52.5mm, inner sep=2mm, draw] at (96mm, 10.5mm) {\textbf{Penalty Threshold:}\phantom{g}100};
+
+
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Slumber:} \normalshape All die penalties begin at zero. Each round, if no ones appear in the fifth roll, all die penalties return to normal thereafter.};
+}}
+
+\tikzset{Golem/.pic={
+\node[anchor=north east, text width=52.5mm, inner sep=2mm, draw] at (96mm, 10.5mm) {\textbf{Penalty Threshold:}\phantom{g}150};
+
+
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Relentless:} \normalshape Any characters who exceed the penalty threshold are killed and cannot win. Play until at most two characters remain.};
+}}
+
+\tikzset{Orc/.pic={
+\node[anchor=north east, text width=52.5mm, inner sep=2mm, draw] at (96mm, 10.5mm) {\textbf{Penalty Threshold:}\phantom{g}150};
+
+
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Cunning:} \normalshape Set any die that yields a value of one when rolled to its maximum value.};
+}}
+
+\tikzset{Skeleton/.pic={
+\node[anchor=north east, text width=52.5mm, inner sep=2mm, draw] at (96mm, 10.5mm) {\textbf{Penalty Threshold:}\phantom{g}200};
+
+
+\node[anchor=north west, text width=92mm, text depth=10mm, inner sep=2mm, draw] at (0,0) {\textbf{Undead:} \normalshape No die can be preemptively locked to its maximum value before it is rolled.};
+}}
+
+
+\tikzset{character_sheet/.pic={
+\large
+\path (-105mm,-74.25mm) -- (105mm, 74.25mm);
+
+\node[anchor=north] at (-51.5mm,70mm) {\setmainfont[Scale=2]{Blackwood Castle}\Huge Delve\,\&\,Dash};
+
+\node[anchor=north west, text width=32.5mm, inner sep=2mm, draw] at (-99.5mm, 52mm) {\textbf{Class:}\phantom{g}#1};
+\node[anchor=north east, text width=52.5mm, inner sep=2mm, draw] at (-3.5mm, 52mm) {\textbf{Name:}\phantom{g}};
+
+\pic at (-99.5mm, 41.5mm) {#1};
+
+\node[anchor=south, minimum width=96mm, minimum height=90.5mm, inner sep=0mm, draw] at (-51.5mm, -69mm) {\includegraphics[scale=0.4]{Images/#1.png}};
+
+
+\normalsize
+\node[anchor=north] at (51.5mm,64.97mm) {
+\begin{tabular}{|c||m{6mm}|m{6mm}|m{6mm}|m{6mm}|m{7.5mm}||c||c|}%||rrrrrl|l|}
+\multicolumn{8}{c}{\setmainfont[Scale=2]{Tex Gyre Schola}\Large \textbf{Journal}} \\[3mm]\hline
+Round\raisebox{-2.5mm}{\rule{0mm}{8mm}} & \centering d4 & \centering d6 & \centering d8 & \centering d10 & \centering d12 & Total & Sum\\[2mm]\hline 
+R1\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & & & & & & \\\hline%% & & & & & & &\\
+R2\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & & & & & & \\\hline
+R3\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & & & & & & \\\hline
+R4\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & & & & & & \\\hline
+R5\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & & & & & & \\\hline
+R6\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & & & & & & \\\hline
+\end{tabular}
+};
+
+
+
+\node[anchor=south, inner sep=0pt] at (51.5mm,-69mm) {
+\begin{tabular}{|c||m{29.25mm}||r|c||c|}%||rrrrrl|l|}
+\multicolumn{5}{c}{\setmainfont[Scale=2]{Tex Gyre Schola}\Large \textbf{Inventory}} \\[3mm]\hline
+Type\raisebox{-2.5mm}{\rule{0mm}{8mm}} & \centering Tally & Count \times ?\,= & Total & Sum\\[2mm]\hline 
+\$2\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & \raggedleft \times 2\,= & & \\\hline
+\$3\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & \raggedleft \times 3\,= & & \\\hline
+\$5\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & \raggedleft \times 5\,= & & \\\hline
+\$7\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & \raggedleft \times 7\,= & & \\\hline
+\phantom{1}\$11\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & \raggedleft \times 11\,= & & \\\hline
+\phantom{\$}\$\$\$\raisebox{-2.5mm}{\rule{0mm}{7mm}} & & \raggedleft \times 1\,= & & \\\hline%% & & & & & & &\\
+\end{tabular}
+};
+}}
+
+\tikzset{cardback/.pic={
+	\begin{scope}
+	\clip (-\cardwidth/2 - \bleed, 0in) --%
+	      (-\cardwidth/2 - \bleed, \cardheight/2 + \bleed) --%
+	      (\cardwidth/2 + \bleed, \cardheight/2 + \bleed) --%
+	      (\cardwidth/2 + \bleed, -\cardheight/2 - \bleed) --%
+	      (-\cardwidth/2 - \bleed, -\cardheight/2 - \bleed) --%
+	      cycle;
+	\pic () at (0,0) {cardbackpattern={black}};
+	% Cutting guides for corners of the cards	
+	\pic () at (0,0) {cutguide={black}};
+\end{scope}
+}}
+
+
+\tikzset{enemy_sheet/.pic={
+\large
+%\path (-105mm,-74.25mm) -- (105mm, 74.25mm);
+\path (-52.5mm,-74.25mm) -- (52.5mm, 74.25mm);
+
+\node[anchor=north] at (0mm,70mm) {\setmainfont[Scale=2]{Blackwood Castle}\Huge Delve\,\&\,Dash};
+
+\node[anchor=north west, text width=32.5mm, inner sep=2mm, draw] at (-48mm, 52mm) {\textbf{Type:}\phantom{g}#1};
+
+\pic at (-48mm, 41.5mm) {#1};
+
+\node[anchor=south, minimum width=96mm, minimum height=90.5mm, inner sep=0mm, draw] at (0mm, -69mm) {\includegraphics[height=80.5mm]{Images/#1.png}};
+
+
+%\pic at (51.5mm, 0) {treasuretable};
+
+}}
+
+\tikzset{treasuretable/.pic={
+\path (-52.5mm,-74.25mm) -- (52.5mm, 74.25mm);
+
+\node[anchor=south, inner sep=0pt] at (0,-69mm) {
+\begin{tabular}{|c||m{9mm}|m{9mm}|m{9mm}|m{9mm}|m{9mm}||c|}%||rrrrrl|l|}
+\multicolumn{7}{c}{\setmainfont[Scale=2]{Tex Gyre Schola}\huge \textbf{Treasure}} \\[3mm]\hline
+Roll\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & \centering \$2 & \centering \$3 & \centering \$5 & \centering \$7 & \centering \$11 & Total\\[2mm]\hline 
+1\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & & & & & & \$0 \\\hline%% & & & & & & &\\
+2\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & \centering I & & & & & \$2 \\\hline
+3\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & & \centering I & & & & \$3\\\hline
+4\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & \centering II & & & & & \$4 \\\hline
+5\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & & & \centering I & & & \$5 \\\hline
+6\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & \centering I & \centering I & & & & \$5 \\\hline
+7\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & & & & \centering I & & \$7 \\\hline
+8\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & \centering III & & & & & \$6 \\\hline
+9\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & & \centering II & & & & \$6 \\\hline
+\phantom{0}10\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & \centering I & & \centering I & & & \$7 \\\hline
+\phantom{1}11\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & & & & & \centering I & \phantom{1}\$11 \\\hline
+\phantom{2}12\raisebox{-3.25mm}{\rule{0mm}{9.1mm}} & \centering II & \centering I & & & & \$7 \\\hline
+\end{tabular}
+};
+}}
+
+
+\tikzset{playeraid/.pic={
+	\begin{scope}
+	\clip (-\cardwidth/2 - \bleed, 0in) --%
+	      (-\cardwidth/2 - \bleed, \cardheight/2 + \bleed) --%
+	      (\cardwidth/2 + \bleed, \cardheight/2 + \bleed) --%
+	      (\cardwidth/2 + \bleed, -\cardheight/2 - \bleed) --%
+	      (-\cardwidth/2 - \bleed, -\cardheight/2 - \bleed) --%
+	      cycle;
+	% Pattern for card back
+%	\path[fill=#1] (-\cardwidth/2 - \bleed, 0in) --%
+%	      (-\cardwidth/2 - \bleed, \cardheight/2 + \bleed) --%
+%	      (\cardwidth/2 + \bleed, \cardheight/2 + \bleed) --%
+%	      (\cardwidth/2 + \bleed, -\cardheight/2 - \bleed) --%
+%	      (-\cardwidth/2 - \bleed, -\cardheight/2 - \bleed) --%
+%	      cycle;
+
+\node at (0,0) {
+\begin{tabular}{|c||c|c|c|c|c|}
+\multicolumn{6}{c}{\setmainfont[Scale=2]{Tex Gyre Schola}\Large \textbf{Treasure}} \\[3mm]\hline
+%\hline
+Roll\rule{0mm}{3.5mm} & \$2 & \$3 & \$5 & \$7 & \$11 \\\hline
+1\rule{0mm}{3.5mm} & & & & & \\\hline
+2\rule{0mm}{3.5mm} & I & & & & \\\hline
+3\rule{0mm}{3.5mm} & & I & & & \\\hline
+4\rule{0mm}{3.5mm} & II & & & & \\\hline
+5\rule{0mm}{3.5mm} & & & I & & \\\hline
+6\rule{0mm}{3.5mm} & I & I & & & \\\hline
+7\rule{0mm}{3.5mm} & & & & I & \\\hline
+8\rule{0mm}{3.5mm} & III & & & & \\\hline
+9\rule{0mm}{3.5mm} & & II & & & \\\hline
+\phantom{0}10\rule{0mm}{3.5mm} & I & & I & & \\\hline
+\phantom{1}11\rule{0mm}{3.5mm} & & & & & I \\\hline
+\phantom{2}12\rule{0mm}{3.5mm} & II & I & & & \\\hline
+
+\end{tabular}
+};
+
+
+	% Cutting guides for corners of the cards	
+	\pic () at (0,0) {cutguide={white}};
+%	\node[draw, minimum height=3.5in, minimum width=2.5in] at (0,0) {};
+\end{scope}
+}}
+
